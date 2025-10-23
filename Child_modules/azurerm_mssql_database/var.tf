@@ -1,0 +1,3 @@
+variable "sql_database" {
+
+}
