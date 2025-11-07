@@ -1,7 +1,7 @@
 trigger: 
 - main
  
-pool: Default
+pool: MLdreamdecor
 steps:
 - task: PowerShell@2
   inputs:
