@@ -1,4 +1,4 @@
-pool: MLdreamdecor
+pool: Azure Pipelines
 trigger: none
 stages:
 - stage: 
