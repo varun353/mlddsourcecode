@@ -1,3 +1,0 @@
-variable "sql_database" {
-
-}
