@@ -26,6 +26,34 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: 'mlddsc'
+
+  - job: 
+    displayName: Manual validation
+    pool: server
+    steps:
+    - task: ManualValidation@1
+    
+      displayName: manual validation
+      inputs:
+        notifyUsers: 'please approve'
+  - job: 
+    displayName: terraform apply
+    steps:
+    - task: TerraformTask@5
+      displayName: Terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'mlddsc'
+        backendAzureRmResourceGroupName: 'temp'
+        backendAzureRmStorageAccountName: 'mytempstorage090'
+        backendAzureRmContainerName: 'mycontainer'
+        backendAzureRmKey: 'tfstate'
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        environmentServiceNameAzureRM: 'mlddsc'
     
     
 
