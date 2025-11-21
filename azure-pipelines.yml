@@ -2,10 +2,12 @@ pool: MLdreamdecor
 trigger:
 - feature/*
 - main
-stages:
-- stage: 
+
+stages: 
+- stage: RgEnvironment
+
   jobs:
-  - job: terraforminitplan
+  - job: TerraformInitPlan
     displayName: terraform init
     steps:
     - task: TerraformTask@5
@@ -31,7 +33,7 @@ stages:
 
   - job: Manualvalidation
     displayName: Manual validation
-    dependsOn: terraforminitplan
+    dependsOn: TerraformInitPlan
     pool: server
     steps:
     - task: ManualValidation@1
@@ -39,9 +41,9 @@ stages:
       displayName: manual validation
       inputs:
         notifyUsers: 'please approve'
+
   - job: 
     displayName: terraform apply
-    dependsOn: Manualvalidation
     condition: succeeded('Manual validation')
     steps:
     - task: TerraformTask@5
