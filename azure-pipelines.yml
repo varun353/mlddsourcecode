@@ -1,6 +1,7 @@
 pool: MLdreamdecor 
 trigger:
 - feature/*
+- main
 stages:
 - stage: 
   jobs:
