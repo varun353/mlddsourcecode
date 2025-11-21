@@ -5,12 +5,10 @@ trigger:
 
 stages: 
 - stage: RgEnvironment
-  displayName: RG Environment
 
   jobs:
-
   - job: TerraformInitPlan
-    displayName: Terraform Init & Plan
+    displayName: terraform init & Plan
     steps:
     - task: TerraformTask@5
       displayName: Terraform init
@@ -22,38 +20,31 @@ stages:
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
         backendAzureRmKey: 'tfstate'
-
     - task: TerraformTask@5
       displayName: Terraform validate
       inputs:
         provider: 'azurerm'
         command: 'validate'
-
     - task: TerraformTask@5
-      displayName: Terraform Plan
       inputs:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: 'mlddsc'
 
-
   - job: Manualvalidation
-    displayName: Manual Validation
+    displayName: Manual validation
     dependsOn: TerraformInitPlan
     pool: server
     steps:
     - task: ManualValidation@1
-      displayName: Approve Deployment
+    
+      displayName: manual validation
       inputs:
-        instructions: 'Please approve'
-        onTimeout: 'reject'
-        timeoutInMinutes: '1440'
+        notifyUsers: 'please approve'
 
-
-  - job: TerraformApply
-    displayName: Terraform Apply
-    dependsOn: Manualvalidation
-    condition: succeeded('Manualvalidation')   # Corrected
+  - job: terraformapply
+    displayName: terraform apply
+    condition: succeeded('Manualvalidation')
     steps:
     - task: TerraformTask@5
       displayName: Terraform init
@@ -65,10 +56,12 @@ stages:
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
         backendAzureRmKey: 'tfstate'
-
     - task: TerraformTask@5
-      displayName: Terraform Apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
         environmentServiceNameAzureRM: 'mlddsc'
+    
+    
+
+
