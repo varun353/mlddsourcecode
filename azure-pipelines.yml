@@ -40,6 +40,7 @@ stages:
         notifyUsers: 'please approve'
   - job: 
     displayName: terraform apply
+    condition: succeeded('Manual validation')
     steps:
     - task: TerraformTask@5
       displayName: Terraform init
