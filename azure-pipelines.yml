@@ -7,6 +7,7 @@ stages:
     displayName: terraforminit
     steps:
     - task: TerraformTask@5
+      displayName: Terraform init
       inputs:
         provider: 'azurerm'
         command: 'init'
@@ -15,6 +16,17 @@ stages:
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
         backendAzureRmKey: 'tfstate'
+    - task: TerraformTask@5
+      displayName: Terraform validate
+      inputs:
+        provider: 'azurerm'
+        command: 'validate'
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: 'mlddsc'
+    
     
 
 
