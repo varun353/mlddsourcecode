@@ -1,6 +1,6 @@
 rg ={
     rg1 ={
-        name = "vindos"
+        rg_name = "vindos"
         location = "centralindia"
     }
 }
