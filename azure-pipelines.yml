@@ -5,8 +5,8 @@ trigger:
 stages:
 - stage: 
   jobs:
-  - job: 
-    displayName: terraforminit
+  - job: terraforminitplan
+    displayName: terraform init
     steps:
     - task: TerraformTask@5
       displayName: Terraform init
@@ -29,8 +29,9 @@ stages:
         command: 'plan'
         environmentServiceNameAzureRM: 'mlddsc'
 
-  - job: 
+  - job: Manualvalidation
     displayName: Manual validation
+    dependsOn: terraforminitplan
     pool: server
     steps:
     - task: ManualValidation@1
@@ -40,6 +41,7 @@ stages:
         notifyUsers: 'please approve'
   - job: 
     displayName: terraform apply
+    dependsOn: Manualvalidation
     condition: succeeded('Manual validation')
     steps:
     - task: TerraformTask@5
