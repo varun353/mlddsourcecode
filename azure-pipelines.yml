@@ -7,25 +7,27 @@ stages:
 - stage: RgEnvironment
 
   jobs:
+  
   - job: TerraformInitPlan
     displayName: terraform init & Plan
     steps:
     - task: TerraformTask@5
-      displayName: Terraform init
+      displayName: terraform init
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'mlddsc'
+        backendServiceArm: 'mlddconnectionfederationmanual'
         backendAzureRmResourceGroupName: 'temp'
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
-        backendAzureRmKey: 'tfstate'
+        backendAzureRmKey: 'prod.tfstate'
     - task: TerraformTask@5
       displayName: Terraform validate
       inputs:
         provider: 'azurerm'
         command: 'validate'
     - task: TerraformTask@5
+      displayName: Terraform plan
       inputs:
         provider: 'azurerm'
         command: 'plan'
@@ -52,12 +54,13 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'mlddsc'
+        backendServiceArm: 'mlddconnectionfederationmanual'
         backendAzureRmResourceGroupName: 'temp'
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
-        backendAzureRmKey: 'tfstate'
+        backendAzureRmKey: 'prod.tfstate'
     - task: TerraformTask@5
+      displayName: Terraform apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
