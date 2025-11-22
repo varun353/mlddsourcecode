@@ -1,55 +1,66 @@
 pool: MLdreamdecor 
-trigger: none
-stages:
-- stage: 
+trigger:
+- feature/*
+- main
+
+stages: 
+- stage: RgEnvironment
+
   jobs:
-  - job: 
-    displayName: terraforminit
+  
+  - job: TerraformInitPlan
+    displayName: terraform init & Plan
     steps:
     - task: TerraformTask@5
-      displayName: Terraform init
+      displayName: terraform init
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'mlddsc'
+        backendServiceArm: 'mlddconnectionfederationmanual'
         backendAzureRmResourceGroupName: 'temp'
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
-        backendAzureRmKey: 'tfstate'
+        backendAzureRmKey: 'prod.tfstate'
     - task: TerraformTask@5
       displayName: Terraform validate
       inputs:
         provider: 'azurerm'
         command: 'validate'
     - task: TerraformTask@5
+      displayName: Terraform plan
       inputs:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: 'mlddsc'
+        
 
-  - job: 
+  - job: Manualvalidation
     displayName: Manual validation
+    dependsOn: TerraformInitPlan
     pool: server
     steps:
     - task: ManualValidation@1
-    
       displayName: manual validation
       inputs:
         notifyUsers: 'please approve'
-  - job: 
+
+  - job: terraformapply
+    dependsOn: Manualvalidation
     displayName: terraform apply
+    condition: succeeded('Manualvalidation')
     steps:
     - task: TerraformTask@5
       displayName: Terraform init
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'mlddsc'
+        backendServiceArm: 'mlddconnectionfederationmanual'
         backendAzureRmResourceGroupName: 'temp'
         backendAzureRmStorageAccountName: 'mytempstorage090'
         backendAzureRmContainerName: 'mycontainer'
-        backendAzureRmKey: 'tfstate'
+        backendAzureRmKey: 'prod.tfstate'
     - task: TerraformTask@5
+      displayName: Terraform apply
       inputs:
         provider: 'azurerm'
         command: 'apply'
