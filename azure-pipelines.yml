@@ -29,6 +29,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
+        environmentServiceNameAzureRM: 'mlddsc'
         
 
   - job: Manualvalidation
