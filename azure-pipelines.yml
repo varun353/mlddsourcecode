@@ -29,7 +29,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        environmentServiceNameAzureRM: 'mlddsc'
+        
 
   - job: Manualvalidation
     displayName: Manual validation
@@ -37,7 +37,6 @@ stages:
     pool: server
     steps:
     - task: ManualValidation@1
-    
       displayName: manual validation
       inputs:
         notifyUsers: 'please approve'
